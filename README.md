@@ -48,3 +48,4 @@ Everything else (profile and graph PDFs, JSON API, API keys) is available to eve
 - Small local models extract less reliably; use a bigger model or a hosted endpoint for quality.
 - Target public figures and organizations. Respect site terms, copyright and data-protection law (e.g. GDPR) – publicly available is not the same as free to profile.
 - Search is not full-proof yet. DuckDuckGo sometime can search the entity, sometimes it fails. I am working on it.
+- Exporting graph pdf shows some issues, trying to fix it. However, exporting profile pdf works as intended.

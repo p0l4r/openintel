@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16
+    environment: { POSTGRES_USER: openintel, POSTGRES_PASSWORD: openintel, POSTGRES_DB: openintel }
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openintel"]
+      interval: 3s
+      retries: 20
+
+  searxng:
+    image: searxng/searxng:latest
+    volumes: ["./searxng/settings.yml:/etc/searxng/settings.yml:ro"]
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes: [ollama:/root/.ollama]
+    environment:
+      OLLAMA_CONTEXT_LENGTH: "8192"   # pages are ~2-3k tokens; default context would truncate them
+      OLLAMA_NUM_PARALLEL: "1"        # 4 GB VRAM: one request at a time
+    ports: ["11434:11434"]
+    # NVIDIA GPU (Docker Desktop + WSL2: only the Windows NVIDIA driver is needed)
+    deploy:
+      resources:
+        reservations:
+          devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]
+
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://openintel:openintel@db:5432/openintel
+      SEARXNG_URL: http://searxng:8080
+    depends_on:
+      db: { condition: service_healthy }
+      searxng: { condition: service_started }
+    restart: unless-stopped
+    ports: ["8000:8000"]
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    volumes: ["./frontend:/app"]
+    command: sh -c "npm install && npm run dev"
+    environment: { API_URL: "http://backend:8000" }
+    ports: ["5173:5173"]
+    depends_on: [backend]
+
+volumes: { pgdata: {}, ollama: {} }

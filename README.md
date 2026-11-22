@@ -40,10 +40,11 @@ Everything else (profile and graph PDFs, JSON API, API keys) is available to eve
 - JSON: `GET /api/v1/research/{id}/result`, `/entities/{id}/graph|timeline|sources`. API keys (created on the Account page) via header `X-API-Key`.
 - Full docs at `/docs` (OpenAPI).
 
-## Known PoC shortcuts (fix before production)
+## Known PoC shortcuts 
 - Jobs run in-process (FastAPI background task + semaphore). Move to Celery/Redis to survive restarts and scale out.
 - Quota check uses a process-local lock; use Redis/DB row locking if running multiple workers.
 - No Alembic migrations (tables auto-created), no email verification, no rate limiting on login, no CAPTCHA.
 - Result/profile URLs are readable by anyone holding the unguessable job id (guest "public profile view").
 - Small local models extract less reliably; use a bigger model or a hosted endpoint for quality.
 - Target public figures and organizations. Respect site terms, copyright and data-protection law (e.g. GDPR) – publicly available is not the same as free to profile.
+- Search is not full-proof yet. DuckDuckGo sometime can search the entity, sometimes it fails. I am working on it.

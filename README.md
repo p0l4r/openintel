@@ -47,6 +47,3 @@ Everything else (profile and graph PDFs, JSON API, API keys) is available to eve
 - Result/profile URLs are readable by anyone holding the unguessable job id (guest "public profile view").
 - Small local models extract less reliably; use a bigger model or a hosted endpoint for quality.
 - Target public figures and organizations. Respect site terms, copyright and data-protection law (e.g. GDPR) – publicly available is not the same as free to profile.
-
-## Upgrading from a version with Stripe
-The `plan` and `stripe_customer_id` columns are dropped automatically on startup. Remove the `STRIPE_*` lines from your `.env` and rebuild: `docker compose up --build`.

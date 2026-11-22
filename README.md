@@ -1,4 +1,4 @@
-# OpenIntel (proof of concept)
+# OpenIntel
 
 Search an entity → 3 AI agents → sourced profile, timeline and clickable relationship graph.
 
@@ -40,7 +40,7 @@ Everything else (profile and graph PDFs, JSON API, API keys) is available to eve
 - JSON: `GET /api/v1/research/{id}/result`, `/entities/{id}/graph|timeline|sources`. API keys (created on the Account page) via header `X-API-Key`.
 - Full docs at `/docs` (OpenAPI).
 
-## Known PoC shortcuts 
+## Know shortcomings
 - Jobs run in-process (FastAPI background task + semaphore). Move to Celery/Redis to survive restarts and scale out.
 - Quota check uses a process-local lock; use Redis/DB row locking if running multiple workers.
 - No Alembic migrations (tables auto-created), no email verification, no rate limiting on login, no CAPTCHA.
